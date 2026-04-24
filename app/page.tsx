@@ -79,14 +79,14 @@ export default function HomePage() {
               lineHeight: 1.1, letterSpacing: '-.01em', color: '#1a1a1a',
               marginBottom: '1.5rem'
             }}>
-              Invisible à votre employeur.<br/>
-              <span style={{ color: '#1e3a8a' }}>Visible aux bons recruteurs.</span>
+              Cherchez un nouveau poste.<br/>
+              <span style={{ color: '#1e3a8a' }}>Sans que votre employeur ne le sache.</span>
             </h1>
             <p className="a3" style={{
               fontSize: '.95rem', color: '#6b6b6b', lineHeight: 1.8,
               marginBottom: '2.5rem', maxWidth: '460px'
             }}>
-              Une CVthèque confidentielle pour les profils en poste. Votre identité reste masquée jusqu&apos;à ce que vous décidiez de vous révéler.
+              Pour ceux qui explorent le marché&hellip; sans mettre leur carrière en danger. Votre identité reste masquée jusqu&apos;à ce que vous décidiez de vous révéler.
             </p>
             <div className="a4" style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
               <a href="/auth/inscription" className="btn-primary" style={btnPrimary}>Créer mon profil confidentiel</a>
@@ -126,14 +126,12 @@ export default function HomePage() {
             {/* Floating cards avec ANIMATIONS */}
             <div className="fc1" style={{ ...floatingCard, top: '1rem', right: '1rem' }}>
               <div style={fcLabel}>Identité</div>
-              <div style={fcVal}>S.M — Anonyme</div>
-              <div style={fcSub}>Profil Executive</div>
+              <div style={fcVal}>Profil anonyme</div>
             </div>
 
             <div className="fc2" style={{ ...floatingCard, bottom: '3rem', left: '1rem' }}>
-              <div style={fcLabel}>Entreprise actuelle</div>
-              <div style={fcVal}>Groupe coté français</div>
-              <div style={blockedTag}>🚫 @mongroupe.fr bloqué</div>
+              <div style={fcLabel}>Entreprise</div>
+              <div style={fcVal}>Domaine bloqué</div>
             </div>
 
             <div className="fc3" style={{ ...floatingCard, top: '42%', right: '1rem' }}>
