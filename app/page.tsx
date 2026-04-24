@@ -1,181 +1,366 @@
-import Link from 'next/link'
-import { Eye, EyeOff, Shield, Users, FileText, Star, Lock } from 'lucide-react'
+'use client'
+
+import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 
 export default function HomePage() {
+  const revealRefs = useRef<(HTMLElement | null)[]>([])
+
+  useEffect(() => {
+    // Intersection Observer pour les animations au scroll
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    revealRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref)
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div className="min-h-screen bg-[#fafaf8] font-sans">
-      
+    <div className="min-h-screen" style={{
+      background: '#fafaf8',
+      color: '#1a1a1a',
+      fontFamily: "'Inter', sans-serif"
+    }}>
+
       {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#fafaf8]/95 backdrop-blur border-b border-black/8 px-8 h-16 flex items-center justify-between">
-        <div className="font-black text-lg tracking-tight">USH-USH</div>
-        <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
-          <Link href="/recruteur" className="hover:text-gray-900 transition-colors">Recruteurs</Link>
-          <Link href="/ao" className="hover:text-gray-900 transition-colors">Appels d'offres</Link>
-          <Link href="/tarifs" className="hover:text-gray-900 transition-colors">Tarifs</Link>
-          <Link href="/references" className="hover:text-gray-900 transition-colors">Références</Link>
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 3rem', height: '76px',
+        background: 'rgba(250,250,248,0.96)', backdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(0,0,0,0.08)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
+          <Image src="/logo-keptcore.png" alt="KeptCore" width={36} height={36} style={{ objectFit: 'contain' }} priority />
+          <span style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '-0.01em' }}>KeptCore</span>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/auth/connexion" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-            Connexion
-          </Link>
-          <Link href="/auth/inscription" className="text-sm font-semibold bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
-            Créer mon profil
-          </Link>
+        <div style={{ display: 'flex', gap: 0, alignItems: 'center' }}>
+          <a href="#comment-ca-marche" className="nav-btn" style={navBtn}>Comment ça marche</a>
+          <a href="/recruteur" className="nav-btn" style={navBtn}>Recruteurs</a>
+          <a href="/tarifs" className="nav-btn" style={navBtn}>Tarifs</a>
+          <a href="#faq" className="nav-btn" style={navBtn}>FAQ</a>
+        </div>
+        <div style={{ display: 'flex', gap: '.5rem' }}>
+          <a href="/auth/connexion" className="nav-ghost" style={navGhost}>Connexion</a>
+          <a href="/auth/inscription" className="nav-cta" style={navCta}>Créer mon profil</a>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="pt-32 pb-20 px-8 max-w-6xl mx-auto">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-            CVthèque confidentielle
-          </div>
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter leading-tight mb-6 text-gray-900">
-            Invisible à votre employeur.<br />
-            <span className="text-blue-900">Visible aux bons recruteurs.</span>
-          </h1>
-          <p className="text-lg text-gray-500 leading-relaxed mb-8">
-            La première CVthèque confidentielle pour les talents en poste. 
-            Explorez le marché, recevez des opportunités et restez totalement invisible pour votre employeur.
-          </p>
-          <div className="flex flex-wrap gap-3 mb-8">
-            <Link href="/auth/inscription" className="bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors text-sm">
-              Créer mon profil anonyme →
-            </Link>
-            <Link href="/recruteur" className="border border-gray-200 text-gray-900 font-medium px-6 py-3 rounded-lg hover:border-gray-400 transition-colors text-sm bg-white">
-              Je suis recruteur →
-            </Link>
-          </div>
-          <div className="flex flex-wrap gap-5 text-sm text-gray-500">
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Votre identité reste masquée</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Votre employeur ne peut pas voir votre profil</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>Vous acceptez ou refusez chaque prise de contact</span>
-          </div>
-          <p className="mt-5 text-sm font-bold text-blue-900">Explorez le marché sans jamais vous exposer.</p>
-        </div>
-      </section>
-
-      {/* PREUVE SOCIALE */}
-      <section className="py-12 px-8 border-y border-black/8 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">Déjà utilisé par</p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {['Cabinets de recrutement', 'Scaleups', 'ESN', 'Entreprises Tech', 'Grands groupes'].map((item) => (
-              <div key={item} className="text-center text-sm font-medium text-gray-400">{item}</div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* COMMENT ÇA MARCHE */}
-      <section className="py-20 px-8 max-w-6xl mx-auto" id="comment-ca-marche">
-        <div className="text-center mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Comment ça fonctionne</p>
-          <h2 className="text-3xl font-black tracking-tight text-gray-900">4 étapes. Zéro risque.</h2>
-        </div>
-        <div className="grid md:grid-cols-4 gap-6">
-          {[
-            { num: '01', title: 'Créez votre profil anonyme', desc: 'Pseudo, fonction, compétences. Pas de nom, pas d\'entreprise.' },
-            { num: '02', title: 'Bloquez votre employeur', desc: 'Ajoutez les domaines à bloquer. Aucun recruteur de ces entreprises ne vous trouve.' },
-            { num: '03', title: 'Les recruteurs vous contactent', desc: 'Vous voyez leur cabinet avant de répondre. Vous gardez le contrôle.' },
-            { num: '04', title: 'Vous révélez votre identité', desc: 'Uniquement si vous l\'acceptez. Jamais avant.' },
-          ].map((step) => (
-            <div key={step.num} className="bg-white rounded-2xl p-6 border border-black/8">
-              <div className="text-3xl font-black text-gray-100 mb-3">{step.num}</div>
-              <h3 className="font-bold text-gray-900 mb-2">{step.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* BLOCAGE EMPLOYEUR */}
-      <section className="py-20 px-8 bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <section style={{ paddingTop: '76px' }}>
+        <div style={{
+          maxWidth: '1160px', margin: '0 auto',
+          padding: '8rem 3rem 5rem',
+          display: 'grid', gridTemplateColumns: '1fr 1.2fr',
+          gap: '4rem', alignItems: 'center'
+        }}>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Innovation clé</p>
-            <h2 className="text-3xl font-black tracking-tight mb-4">
-              Votre employeur ne peut pas vous voir.
-            </h2>
-            <p className="text-white/60 leading-relaxed mb-6">
-              Bloquez votre employeur, ses filiales et vos anciens employeurs. 
-              Aucun recruteur de ces organisations ne peut trouver votre profil.
+            <div className="a1" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+              fontSize: '.72rem', letterSpacing: '.12em', textTransform: 'uppercase',
+              color: '#111', marginBottom: '1.5rem'
+            }}>
+              <span style={{ width: '28px', height: '1px', background: '#555' }}></span>
+              Confidentiel par défaut · Tous profils
+            </div>
+            <h1 className="a2" style={{
+              fontSize: 'clamp(2.4rem, 5vw, 3.8rem)', fontWeight: 800,
+              lineHeight: 1.1, letterSpacing: '-.01em', color: '#1a1a1a',
+              marginBottom: '1.5rem'
+            }}>
+              Invisible à votre employeur.<br/>
+              <span style={{ color: '#1e3a8a' }}>Visible aux bons recruteurs.</span>
+            </h1>
+            <p className="a3" style={{
+              fontSize: '.95rem', color: '#6b6b6b', lineHeight: 1.8,
+              marginBottom: '2.5rem', maxWidth: '460px'
+            }}>
+              Une CVthèque confidentielle pour les profils en poste. Votre identité reste masquée jusqu&apos;à ce que vous décidiez de vous révéler.
             </p>
-            <Link href="/auth/inscription" className="bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors text-sm inline-block">
-              Essayer gratuitement →
-            </Link>
+            <div className="a4" style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap', marginBottom: '3rem' }}>
+              <a href="/auth/inscription" className="btn-primary" style={btnPrimary}>Créer mon profil confidentiel</a>
+              <a href="/recruteur" className="btn-outline" style={btnOutline}>Je suis recruteur →</a>
+            </div>
+            <div className="a5" style={{ display: 'flex', flexDirection: 'column', gap: '.65rem' }}>
+              <PromiseItem>Votre identité reste masquée</PromiseItem>
+              <PromiseItem>Votre employeur ne peut pas voir votre profil</PromiseItem>
+              <PromiseItem>Vous acceptez ou refusez chaque prise de contact</PromiseItem>
+            </div>
+            <div className="a5" style={{ marginTop: '1.25rem', fontSize: '1rem', fontWeight: 700, color: '#1e3a8a', letterSpacing: '-.01em' }}>
+              Explorez le marché sans jamais vous exposer.
+            </div>
           </div>
-          <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Entreprises bloquées</p>
-            <div className="flex flex-col gap-2">
-              {['Votre employeur actuel', 'Toutes ses filiales', 'Vos anciens employeurs', 'Tout domaine email de votre choix'].map(item => (
-                <div key={item} className="flex items-center gap-3 text-sm text-white/80">
-                  <span className="text-green-400 font-bold">✓</span>
-                  {item}
-                </div>
-              ))}
+
+          {/* HERO RIGHT - Image avec cartes flottantes animées */}
+          <div className="a2" style={{ position: 'relative' }}>
+            <div style={{
+              position: 'relative', borderRadius: '16px', overflow: 'hidden',
+              height: '640px',
+              background: 'linear-gradient(135deg, #e8e7e3 0%, #d4d2cd 100%)'
+            }}>
+              <Image
+                src="/hero-executive.png"
+                alt="Executive anonyme — Profil confidentiel"
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                priority
+              />
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(to bottom, transparent 50%, rgba(250,250,248,.6))'
+              }}></div>
+            </div>
+
+            {/* Floating cards avec ANIMATIONS */}
+            <div className="fc1" style={{ ...floatingCard, top: '1rem', right: '1rem' }}>
+              <div style={fcLabel}>Identité</div>
+              <div style={fcVal}>S.M — Anonyme</div>
+              <div style={fcSub}>Profil Executive</div>
+            </div>
+
+            <div className="fc2" style={{ ...floatingCard, bottom: '3rem', left: '1rem' }}>
+              <div style={fcLabel}>Entreprise actuelle</div>
+              <div style={fcVal}>Groupe coté français</div>
+              <div style={blockedTag}>🚫 @mongroupe.fr bloqué</div>
+            </div>
+
+            <div className="fc3" style={{ ...floatingCard, top: '42%', right: '1rem' }}>
+              <div style={fcLabel}>Statut</div>
+              <div style={{ ...fcVal, color: '#2d6a4f' }}>● À l&apos;écoute</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ECOSYSTÈME */}
-      <section className="py-20 px-8 bg-[#f4f3ef]">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Une plateforme complète</p>
-            <h2 className="text-3xl font-black tracking-tight text-gray-900">Bien plus qu'une CVthèque</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: <Lock size={20} />, title: 'CVthèque confidentielle', desc: 'Profils anonymisés, blocage employeur, CV accessible sur accord.', items: ['Profils actifs en poste', 'Identité masquée jusqu\'à accord', 'Filtres : fonction, secteur, logiciels'] },
-              { icon: <Star size={20} />, title: 'Références professionnelles', desc: 'Pour les candidats et les recruteurs.', items: ['Candidat : constituez votre dossier', 'Recruteur : vérification B2B', 'Rapport détaillé sous 7 jours'] },
-              { icon: <FileText size={20} />, title: 'Appels d\'offres cabinets', desc: 'Publiez votre besoin. Les cabinets viennent à vous.', items: ['Publication gratuite', 'Cabinets vérifiés SIRET', 'Vous choisissez votre cabinet'] },
-            ].map((card) => (
-              <div key={card.title} className="bg-white rounded-2xl p-6 border border-black/8">
-                <div className="w-10 h-10 bg-[#f4f3ef] rounded-xl flex items-center justify-center mb-4 text-gray-700">
-                  {card.icon}
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">{card.title}</h3>
-                <p className="text-sm text-gray-500 mb-4 leading-relaxed">{card.desc}</p>
-                <div className="flex flex-col gap-1.5">
-                  {card.items.map(item => (
-                    <div key={item} className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-green-700 font-bold">✓</span>{item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* STATS BAR */}
+      <div style={{ background: '#1a1a1a', color: 'white' }}>
+        <div style={{
+          maxWidth: '1160px', margin: '0 auto',
+          padding: '2rem 3rem',
+          display: 'flex', justifyContent: 'space-around', gap: '1rem', flexWrap: 'wrap'
+        }}>
+          <StatItem num="100%" label="Identité masquée"/>
+          <div style={statSep}></div>
+          <StatItem num="0" label="CV partagé sans accord"/>
+          <div style={statSep}></div>
+          <StatItem num="Tous" label="Secteurs couverts"/>
+          <div style={statSep}></div>
+          <StatItem num="Gratuit" label="Pour les candidats"/>
+        </div>
+      </div>
+
+      {/* FEATURES */}
+      <section style={section}>
+        <div ref={(el) => { revealRefs.current[0] = el }} className="reveal">
+          <SectionEyebrow>Pourquoi KeptCore</SectionEyebrow>
+        </div>
+        <h2 ref={(el) => { revealRefs.current[1] = el }} className="reveal rd1" style={sectionTitle}>
+          Conçu pour ceux qui explorent… en silence
+        </h2>
+        <p ref={(el) => { revealRefs.current[2] = el }} className="reveal rd2" style={sectionSub}>
+          À partir de 100k€ de package, une recherche visible peut fragiliser votre position actuelle. KeptCore est fait pour vous.
+        </p>
+        <div ref={(el) => { revealRefs.current[3] = el }} className="reveal rd3" style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '1px', background: 'rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.08)',
+          borderRadius: '12px', overflow: 'hidden'
+        }}>
+          <FeatCard num="01" title="Anonymat absolu" desc='Ni votre nom, ni votre employeur. Vous décrivez votre secteur librement — "Groupe industriel coté" plutôt que votre entreprise réelle.'/>
+          <FeatCard num="02" title="Blocage par domaine" desc="Bloquez @votregroupe.fr, ses filiales et les cabinets mandatés. Aucune exposition interne possible."/>
+          <FeatCard num="03" title="Package complet visible" desc="Variable, véhicule, LTIP, intéressement, participation. Les recruteurs savent exactement ce qu'il faut proposer."/>
+          <FeatCard num="04" title="Vous choisissez" desc="Aucun contact sans votre accord. Votre CV n'est jamais partagé automatiquement — vous restez maître."/>
+        </div>
+      </section>
+
+      {/* COMMENT CA MARCHE */}
+      <section id="comment-ca-marche" style={section}>
+        <div ref={(el) => { revealRefs.current[4] = el }} className="reveal">
+          <SectionEyebrow>Comment ça marche</SectionEyebrow>
+        </div>
+        <h2 ref={(el) => { revealRefs.current[5] = el }} className="reveal rd1" style={sectionTitle}>
+          4 étapes. Zéro risque.
+        </h2>
+        <div ref={(el) => { revealRefs.current[6] = el }} className="reveal rd2" style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '2rem', marginTop: '3rem'
+        }}>
+          <HowItem num="01" title="Créez votre profil anonyme" desc="Pseudo, fonction, compétences. Pas de nom, pas d'entreprise."/>
+          <HowItem num="02" title="Bloquez votre employeur" desc="Ajoutez les domaines à bloquer. Aucun recruteur de ces entreprises ne vous trouve."/>
+          <HowItem num="03" title="Les recruteurs vous contactent" desc="Vous voyez leur cabinet avant de répondre. Vous gardez le contrôle."/>
+          <HowItem num="04" title="Vous révélez votre identité" desc="Uniquement si vous l'acceptez. Jamais avant."/>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-8 bg-gray-900 text-white text-center">
-        <div className="max-w-xl mx-auto">
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Rejoignez USH-USH</p>
-          <h2 className="text-3xl font-black tracking-tight mb-4">Explorez le marché<br />sans vous exposer.</h2>
-          <p className="text-white/60 mb-8">Inscription gratuite · Profil sous pseudonyme · Vous gardez le contrôle</p>
-          <Link href="/auth/inscription" className="bg-white text-gray-900 font-bold px-8 py-3.5 rounded-xl hover:bg-gray-100 transition-colors inline-block">
+      <section style={{ background: '#1a1a1a', padding: '6rem 3rem', textAlign: 'center' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <div style={{ fontSize: '.7rem', letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', marginBottom: '1.25rem' }}>
+            Rejoignez KeptCore
+          </div>
+          <h2 style={{
+            fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 500,
+            color: 'white', lineHeight: 1.15, marginBottom: '1.25rem'
+          }}>
+            Explorez le marché<br/>sans vous exposer.
+          </h2>
+          <p style={{ fontSize: '.9rem', color: 'rgba(255,255,255,0.75)', marginBottom: '2.5rem', lineHeight: 1.7 }}>
+            Inscription gratuite · Profil sous pseudonyme · Vous gardez le contrôle
+          </p>
+          <a href="/auth/inscription" style={{
+            background: 'white', color: '#1a1a1a', textDecoration: 'none',
+            fontSize: '.88rem', fontWeight: 600, padding: '.85rem 2.25rem',
+            borderRadius: '8px', display: 'inline-block', letterSpacing: '.02em'
+          }}>
             Créer mon profil confidentiel →
-          </Link>
+          </a>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-gray-900 border-t border-white/5 px-8 py-10">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="font-black text-white">USH-USH</div>
-          <div className="flex gap-6 text-sm text-white/40">
-            <Link href="/legal" className="hover:text-white/70 transition-colors">Mentions légales</Link>
-            <Link href="/legal" className="hover:text-white/70 transition-colors">CGU</Link>
-            <Link href="/legal" className="hover:text-white/70 transition-colors">RGPD</Link>
-            <span>contact@ush-ush.fr</span>
-          </div>
-          <div className="text-xs text-white/25">© 2025 USH-USH</div>
+      <footer style={{
+        background: '#f4f3ef', borderTop: '1px solid rgba(0,0,0,0.08)',
+        padding: '1.75rem 3rem',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        fontSize: '.78rem', color: '#6b6b6b', flexWrap: 'wrap', gap: '.5rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+          <Image src="/logo-keptcore.png" alt="KeptCore" width={24} height={24} style={{ objectFit: 'contain' }} />
+          <span style={{ fontWeight: 800 }}>KeptCore</span>
         </div>
+        <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <a href="/legal" style={{ color: '#6b6b6b', textDecoration: 'none' }}>Mentions légales</a>
+          <a href="/cgu" style={{ color: '#6b6b6b', textDecoration: 'none' }}>CGU</a>
+          <a href="/legal" style={{ color: '#6b6b6b', textDecoration: 'none' }}>RGPD</a>
+        </div>
+        <div>© 2026 KeptCore</div>
       </footer>
+    </div>
+  )
+}
+
+// STYLES
+const navBtn: React.CSSProperties = {
+  background: 'none', border: 'none', color: '#6b6b6b',
+  fontSize: '.82rem', padding: '.35rem .85rem', borderRadius: '8px',
+  textDecoration: 'none', letterSpacing: '.02em', cursor: 'pointer'
+}
+const navGhost: React.CSSProperties = {
+  background: 'none', border: '1px solid rgba(0,0,0,0.14)', color: '#4a4a4a',
+  fontSize: '.8rem', padding: '.4rem 1.1rem', borderRadius: '8px',
+  textDecoration: 'none', cursor: 'pointer'
+}
+const navCta: React.CSSProperties = {
+  background: '#1a1a1a', color: 'white', fontSize: '.8rem', fontWeight: 500,
+  padding: '.45rem 1.2rem', borderRadius: '8px', textDecoration: 'none',
+  letterSpacing: '.03em', marginLeft: '.5rem'
+}
+const btnPrimary: React.CSSProperties = {
+  background: '#1a1a1a', color: 'white', fontSize: '.85rem', fontWeight: 500,
+  padding: '.75rem 1.75rem', borderRadius: '8px', textDecoration: 'none',
+  letterSpacing: '.02em'
+}
+const btnOutline: React.CSSProperties = {
+  background: 'none', border: '1px solid rgba(0,0,0,0.14)', color: '#4a4a4a',
+  fontSize: '.85rem', padding: '.7rem 1.5rem', borderRadius: '8px',
+  textDecoration: 'none'
+}
+const section: React.CSSProperties = {
+  maxWidth: '1160px', margin: '0 auto', padding: '5rem 3rem'
+}
+const sectionTitle: React.CSSProperties = {
+  fontSize: 'clamp(1.8rem, 3vw, 2.6rem)', fontWeight: 700,
+  lineHeight: 1.2, color: '#1a1a1a', marginBottom: '1rem'
+}
+const sectionSub: React.CSSProperties = {
+  fontSize: '.9rem', color: '#6b6b6b', lineHeight: 1.8,
+  maxWidth: '560px', marginBottom: '3rem'
+}
+const statSep: React.CSSProperties = {
+  width: '1px', background: 'rgba(255,255,255,0.1)', alignSelf: 'stretch'
+}
+const floatingCard: React.CSSProperties = {
+  position: 'absolute', background: 'rgba(255,255,255,0.95)',
+  border: '1px solid rgba(0,0,0,0.08)', borderRadius: '10px',
+  padding: '.85rem 1.1rem', backdropFilter: 'blur(8px)',
+  boxShadow: '0 4px 24px rgba(0,0,0,0.08)'
+}
+const fcLabel: React.CSSProperties = {
+  fontSize: '.65rem', color: '#6b6b6b',
+  letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: '3px'
+}
+const fcVal: React.CSSProperties = {
+  fontSize: '.82rem', fontWeight: 600, color: '#1a1a1a'
+}
+const fcSub: React.CSSProperties = {
+  fontSize: '.7rem', color: '#6b6b6b', marginTop: '2px'
+}
+const blockedTag: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: '4px',
+  fontSize: '.68rem', color: '#b91c1c',
+  background: 'rgba(185,28,28,0.06)', border: '1px solid rgba(185,28,28,0.15)',
+  borderRadius: '20px', padding: '2px 8px', marginTop: '4px'
+}
+
+// COMPONENTS
+function PromiseItem({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', fontSize: '.83rem', color: '#4a4a4a' }}>
+      <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#555', flexShrink: 0 }}></div>
+      {children}
+    </div>
+  )
+}
+
+function StatItem({ num, label }: { num: string, label: string }) {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <span style={{ fontSize: '2rem', fontWeight: 700, color: '#ffffff', display: 'block' }}>{num}</span>
+      <span style={{ fontSize: '.72rem', color: 'rgba(255,255,255,0.55)', letterSpacing: '.06em', textTransform: 'uppercase', display: 'block', marginTop: '2px' }}>{label}</span>
+    </div>
+  )
+}
+
+function SectionEyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: '.6rem',
+      fontSize: '.7rem', letterSpacing: '.12em', textTransform: 'uppercase',
+      color: '#111', marginBottom: '.75rem'
+    }}>
+      <span style={{ width: '24px', height: '1px', background: '#555' }}></span>
+      {children}
+    </div>
+  )
+}
+
+function FeatCard({ num, title, desc }: { num: string, title: string, desc: string }) {
+  return (
+    <div className="feat-card" style={{ background: 'white', padding: '2rem' }}>
+      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#6366f1', opacity: 0.7, marginBottom: '.75rem', lineHeight: 1 }}>{num}</div>
+      <div style={{ fontSize: '.9rem', fontWeight: 600, color: '#1a1a1a', marginBottom: '.5rem', letterSpacing: '.01em' }}>{title}</div>
+      <div style={{ fontSize: '.82rem', color: '#6b6b6b', lineHeight: 1.7 }}>{desc}</div>
+    </div>
+  )
+}
+
+function HowItem({ num, title, desc }: { num: string, title: string, desc: string }) {
+  return (
+    <div>
+      <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#6366f1', opacity: 0.8, lineHeight: 1, marginBottom: '.75rem', letterSpacing: '.05em' }}>{num}</div>
+      <div style={{ fontSize: '.9rem', fontWeight: 600, color: '#1a1a1a', marginBottom: '.4rem' }}>{title}</div>
+      <div style={{ fontSize: '.82rem', color: '#6b6b6b', lineHeight: 1.7 }}>{desc}</div>
     </div>
   )
 }
