@@ -57,8 +57,8 @@ export async function middleware(request: NextRequest) {
 
   return supabaseResponse
 }
-
 export const config = {
+  runtime: 'nodejs',
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
